@@ -51,15 +51,15 @@ void encrypt_affine(char *plaintext, int key_a, int key_b)
 
 void decrypt_affine(char *ciphertext, int key_a, int key_b)
 {
-    int a_inv = 0, i = 0, plaintext_val;
+    int i = 0, plaintext_val;
     char plaintext;
 
-    for (int j = 0; j < 26; j++)
-        if (key_a != 0 && (key_a * j) % 26 == 1)
-        {
-            a_inv = j;
-            break;
-        }
+    // for (int j = 0; j < 26; j++)
+    //     if (key_a != 0 && (key_a * j) % 26 == 1)
+    //     {
+    //         a_inv = j;
+    //         break;
+    //     }
 
     if (a_inv == 0)
     {
