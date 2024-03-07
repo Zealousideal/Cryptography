@@ -2,6 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
+
+int key_a, key_b, a_inv;
+
+void gen_key()
+{
+    char coprimes[] = {3, 5, 7, 9, 11, 15, 17, 19, 21, 23, 25};
+    char inverses[] = {9, 21, 15, 3, 19, 7, 23, 11, 5, 17, 25};
+
+    int index = rand() % 11;
+
+    key_a = coprimes[index];
+    a_inv = inverses[index];
+    key_b = rand() % 26;
+}
 
 void encrypt_affine(char *plaintext, int key_a, int key_b)
 {
@@ -36,17 +51,17 @@ void encrypt_affine(char *plaintext, int key_a, int key_b)
 
 void decrypt_affine(char *ciphertext, int key_a, int key_b)
 {
-    int key_a_inv = 0, i = 0, plaintext_val;
+    int a_inv = 0, i = 0, plaintext_val;
     char plaintext;
 
     for (int j = 0; j < 26; j++)
         if (key_a != 0 && (key_a * j) % 26 == 1)
         {
-            key_a_inv = j;
+            a_inv = j;
             break;
         }
 
-    if (key_a_inv == 0)
+    if (a_inv == 0)
     {
         printf("Invalid key_a. Modular multiplicative inverse does not exist.\n");
         return;
@@ -58,7 +73,7 @@ void decrypt_affine(char *ciphertext, int key_a, int key_b)
         {
             if (islower(ciphertext[i]))
             {
-                plaintext_val = ((((int)ciphertext[i] - 97 - key_b) * key_a_inv) % 26);
+                plaintext_val = ((((int)ciphertext[i] - 97 - key_b) * a_inv) % 26);
                 if (plaintext_val < 0)
                     plaintext_val += 26;
                 plaintext = (char)(plaintext_val + 97);
@@ -66,7 +81,7 @@ void decrypt_affine(char *ciphertext, int key_a, int key_b)
 
             else if (isupper(ciphertext[i]))
             {
-                plaintext_val = ((((int)ciphertext[i] - 65 - key_b) * key_a_inv) % 26);
+                plaintext_val = ((((int)ciphertext[i] - 65 - key_b) * a_inv) % 26);
                 if (plaintext_val < 0)
                     plaintext_val += 26;
                 plaintext = (char)(plaintext_val + 65);
@@ -84,7 +99,8 @@ void decrypt_affine(char *ciphertext, int key_a, int key_b)
 
 int main()
 {
-    int key_a = 17, key_b = 20;
+    gen_key();
+
     char plaintext[101];
     char ciphertext[101];
 
